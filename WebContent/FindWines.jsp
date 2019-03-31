@@ -42,7 +42,7 @@
 	<body>
 		<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
 			<a class="navbar-brand nav-header" 
-			   href="course-list.template.client.html">
+			   href="/WineConnoisseur/">
 				Wine Connoisseur
 			</a>
 		</div>

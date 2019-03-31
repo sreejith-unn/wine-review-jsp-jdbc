@@ -13,6 +13,12 @@
 		<title>Delete a Wine</title>
 	</head>
 	<body>
+		<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand nav-header" 
+			   href="/WineConnoisseur/">
+				Wine Connoisseur
+			</a>
+		</div>
 		<div class="container-fluid">
 			<h1>Delete Wine</h1>
 			<div 
