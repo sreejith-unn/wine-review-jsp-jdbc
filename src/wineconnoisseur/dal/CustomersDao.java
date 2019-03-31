@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import wineconnoisseur.models.Customers;
+import wineconnoisseur.models.Tasters;
 import wineconnoisseur.models.Users;
 
 public class CustomersDao extends UsersDao{
@@ -80,6 +81,32 @@ public class CustomersDao extends UsersDao{
 			ConnectionManager.closeResultSet(results);
 		}
 		return null;
+	}
+	
+	public Customers update(Customers customer) throws SQLException {
+		super.update(new Users(customer.getUserId(),customer.getUserName(),
+				customer.getPassword(),customer.getFirstName(),customer.getLastName()));
+		String updateSql = "UPDATE customers SET About = ? WHERE CustomerID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		int affectedRowCount = -1;
+		try {
+			connection = ConnectionManager.getConnection();
+			ps = connection.prepareStatement(updateSql);
+			ps.setString(1, customer.getAbout());
+			ps.setInt(2, customer.getUserId());
+			affectedRowCount = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.closeConnection(connection);
+			ConnectionManager.closeStatement(ps);
+		}
+		if (affectedRowCount == 0) {
+			throw new SQLException("Failed to update the specified customer!");
+		}
+		customer = getCustomerById(customer.getUserId());
+		return customer;
 	}
 	
 	public Customers delete(Customers customer) throws SQLException {

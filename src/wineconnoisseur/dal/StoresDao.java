@@ -1,6 +1,9 @@
 package wineconnoisseur.dal;
 
 import wineconnoisseur.models.Stores;
+import wineconnoisseur.models.Tasters;
+import wineconnoisseur.models.Users;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -121,6 +124,37 @@ public class StoresDao {
 			ConnectionManager.closeResultSet(rs);
 		}
 		return stores;
+	}
+	
+	public Stores update(Stores store) throws SQLException {
+	
+		String updateSql = "UPDATE stores SET Name = ?, Street1 = ?, Street2 = ?,"
+				+ "City = ?, State = ?, Zip = ? WHERE StoreID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		int affectedRowCount = -1;
+		try {
+			connection = ConnectionManager.getConnection();
+			ps = connection.prepareStatement(updateSql);
+			ps.setString(1, store.getName());
+			ps.setString(2, store.getStreet1());
+			ps.setString(3, store.getStreet2());
+			ps.setString(4, store.getCity());
+			ps.setString(5, store.getState());
+			ps.setInt(6, store.getZip());
+			ps.setInt(7, store.getStoreId());
+			affectedRowCount = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.closeConnection(connection);
+			ConnectionManager.closeStatement(ps);
+		}
+		if (affectedRowCount == 0) {
+			throw new SQLException("Failed to update the specified store!");
+		}
+		store = getStoreById(store.getStoreId());
+		return store;
 	}
 	
 	public Stores delete(Stores store) throws SQLException {
