@@ -22,7 +22,10 @@
 
 	</div>
 	<div class="container-fluid mt-5 pt-3">
-		<h2>Store Information</h2>
+		<h2>Store Information <a style="color: black" title="Edit"
+				href="editstore?id=<c:out value="${store.getStoreId()}"/>"><c:out
+					value="" /><i class="fas fa-edit"></i></a>
+					</h2>
 		<form>
 			<div class="form-group row">
 				<label for="storename" class="col-sm-2 col-form-label"><b>Store Name</b></label>

@@ -13,35 +13,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import wineconnoisseur.dal.CustomersDao;
-import wineconnoisseur.dal.TastersDao;
+import wineconnoisseur.dal.StoresDao;
 import wineconnoisseur.models.Customers;
-import wineconnoisseur.models.Tasters;
+import wineconnoisseur.models.Stores;
 
-@WebServlet("/editcustomer")
-public class EditCustomer extends HttpServlet{
+@WebServlet("/editstore")
+public class EditStore extends HttpServlet{
+	protected StoresDao storesDao;
 	
-	protected CustomersDao customersDao;
 	@Override
 	public void init() throws ServletException {
-		customersDao = CustomersDao.getInstance();
+		storesDao = StoresDao.getInstance();
 	}
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// Map for storing messages.
-		String customerId = req.getParameter("id");
+		String storeId = req.getParameter("id");
 		Map<String, String> messages = new HashMap<String, String>();
 		req.setAttribute("messages", messages);
-		Customers customer = new Customers();
+		Stores store = new Stores();
 		try {
-			customer = customersDao.getCustomerById(Integer.parseInt(customerId));
+			store = storesDao.getStoreById(Integer.parseInt(storeId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IOException(e);
 		}
-		req.setAttribute("customer", customer);
-		req.getRequestDispatcher("/EditCustomer.jsp").forward(req, resp);
+		req.setAttribute("store", store);
+		req.getRequestDispatcher("/EditStore.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -52,28 +52,28 @@ public class EditCustomer extends HttpServlet{
 		req.setAttribute("messages", messages);
 
 		// Retrieve and validate name.
-		String customerId = req.getParameter("customerid");
-		String userName = req.getParameter("customername");
-		String password = req.getParameter("password");
-		String firstName = req.getParameter("firstname");
-		String lastName = req.getParameter("lastname");
-		String about = req.getParameter("about");
+		String storeId = req.getParameter("storeid");
+		String name= req.getParameter("storename");
+		String street1 = req.getParameter("street1");
+		String street2 = req.getParameter("street2");
+		String city = req.getParameter("city");
+		String state = req.getParameter("state");
+		String zip = req.getParameter("zip");
 
 		
-		
-		Customers c = new Customers(Integer.parseInt(customerId), userName, password,
-				firstName, lastName, about);
+		Stores s = new Stores(Integer.parseInt(storeId),name,street1,street2,city,state,Integer.parseInt(zip));
 				
 		try {
-			customersDao.update(c);
-			c = customersDao.getCustomerById(c.getUserId());
-			messages.put("success", "Successfully updated Customer");
+			storesDao.update(s);
+			s = storesDao.getStoreById(Integer.parseInt(storeId));
+			messages.put("success", "Successfully updated Store");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IOException(e);
 		}
 
-		req.setAttribute("customer", c);
-		req.getRequestDispatcher("/EditCustomer.jsp").forward(req, resp);
+		req.setAttribute("store", s);
+		req.getRequestDispatcher("/EditStore.jsp").forward(req, resp);
 	}
+	
 }
