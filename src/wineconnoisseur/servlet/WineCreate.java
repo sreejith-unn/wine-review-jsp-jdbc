@@ -29,7 +29,7 @@ public class WineCreate extends HttpServlet {
 			throws ServletException, IOException {
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
-        messages.put("result", "init");
+        messages.put("action", "init");
         req.getRequestDispatcher("/WineCreate.jsp").forward(req, resp);
 	}
 
@@ -42,7 +42,7 @@ public class WineCreate extends HttpServlet {
        String description = req.getParameter("descriptionFld");
        if (wineName == null || wineName.trim().isEmpty() || 
     	   description == null || description.trim().isEmpty()) {
-    	   messages.put("result", "error");
+    	   messages.put("action", "error");
     	   messages.put("info", "Please input a valid name and a description for the wine.");
        } else {
     	   Integer price = Integer.parseInt(req.getParameter("priceFld"));
@@ -53,10 +53,10 @@ public class WineCreate extends HttpServlet {
     	   try {
     		   wine = winesDao.create(wine);
     		   if (wine.getWineId() == 0) {
-    			   messages.put("result", "error");
+    			   messages.put("action", "error");
     			   messages.put("info", "Cannot add the wine into the database.");
     		   } else {
-    			   messages.put("result", "success");
+    			   messages.put("action", "success");
     			   messages.put("info", "Successfully created a new wine " + wineName);
     		   }
     	   } catch (SQLException e) {
