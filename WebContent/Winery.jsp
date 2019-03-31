@@ -10,14 +10,13 @@
 <title>Insert title here</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<!-- <link href="course-list.style.client.css" rel="stylesheet" /> -->
 <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
 	rel="stylesheet">
 </head>
 <body>
 	<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand nav-header"
-			href="course-list.template.client.html">Wine Connoisseur </a>
+			href="/WineConnoisseur/">Wine Connoisseur </a>
 
 	</div>
 	<div class="container-fluid mt-5 pt-3">
@@ -68,7 +67,7 @@
 			<c:forEach items="${wines}" var="wine">
 				<tr>
 					<td><c:out value="${wine.getWineId()}" /></td>
-					<td><a href="wines?id=<c:out value="${wine.getWineId()}"/>"><c:out value="${wine.getName()}" /></a></td>
+					<td><a href="winedetails?id=<c:out value="${wine.getWineId()}"/>"><c:out value="${wine.getName()}" /></a></td>
 					<td><c:out value="${wine.getDescription()}" /></td>
 					<td><c:out value="${wine.getPrice()}" /></td>
 					<td><c:out value="${wine.getVariety()}" /></td>

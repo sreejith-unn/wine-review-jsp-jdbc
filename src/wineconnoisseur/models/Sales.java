@@ -23,6 +23,12 @@ public class Sales {
 		this.numOfBottles = no;
 	}
 	
+	public Sales(int wId, int stId, int no) {
+		this.wineId = wId;
+		this.storeId = stId;
+		this.numOfBottles = no;
+	}
+	
 	public Sales(int sId, int wId, int stId, Date d, int no) {
 		this.saleId = sId;
 		this.wineId = wId;

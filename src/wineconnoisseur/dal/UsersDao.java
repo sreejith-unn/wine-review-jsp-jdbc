@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import wineconnoisseur.dal.ConnectionManager;
+import wineconnoisseur.models.Tasters;
 import wineconnoisseur.models.Users;
 
 
@@ -114,5 +115,31 @@ protected ConnectionManager connectionManager;
 			ConnectionManager.closeResultSet(results);
 		}
 		return null;
+	}
+	
+	public Users update(Users user) throws SQLException {
+		String updateSql = "UPDATE users SET Password = ?, FirstName = ?, LastName = ? WHERE UserID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		int affectedRowCount = -1;
+		try {
+			connection = ConnectionManager.getConnection();
+			ps = connection.prepareStatement(updateSql);
+			ps.setString(1, user.getPassword());
+			ps.setString(2, user.getFirstName());
+			ps.setString(3, user.getLastName());
+			ps.setInt(4, user.getUserId());
+			affectedRowCount = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.closeConnection(connection);
+			ConnectionManager.closeStatement(ps);
+		}
+		if (affectedRowCount == 0) {
+			throw new SQLException("Failed to update the specified wine record!");
+		}
+		user = getUserByUserId(user.getUserId());
+		return user;
 	}
 }

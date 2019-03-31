@@ -16,6 +16,12 @@ public class Reviews {
 		this.reviewId = reviewId;
 	}
 	
+	public Reviews(int cId, int wId, String content) {
+		this.customerId = cId;
+		this.wineId = wId;
+		this.content = content;
+	}
+	
 	public Reviews(int cId, int wId, String content, Date created) {
 		this.customerId = cId;
 		this.wineId = wId;
