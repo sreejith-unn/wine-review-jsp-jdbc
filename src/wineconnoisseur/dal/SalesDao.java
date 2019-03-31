@@ -24,8 +24,8 @@ public class SalesDao {
 	
 	public Sales create(Sales sale) throws SQLException {
 		String insertSql = 
-				"INSERT INTO Sales(WineID, StoreID, MadeDate, NumOfBottles) "
-				+ "VALUES(?, ?, ?, ?);";
+				"INSERT INTO Sales(WineID, StoreID, NumOfBottles) "
+				+ "VALUES(?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -35,8 +35,7 @@ public class SalesDao {
 			ps = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, sale.getWineId());
 			ps.setInt(2, sale.getStoreId());
-			ps.setTimestamp(3, new Timestamp(sale.getMadeDate().getTime()));
-			ps.setInt(4, sale.getNumOfBottles());
+			ps.setInt(3, sale.getNumOfBottles());
 			affectedRowCount = ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			int saleId = -1;
@@ -107,6 +106,68 @@ public class SalesDao {
 			while(rs.next()) {
 				int saleId = rs.getInt("SaleID");
 				int wineId = rs.getInt("WineID");
+				int storeId = rs.getInt("StoreID");
+				Date madeDate = new Date(rs.getTimestamp("MadeDate").getTime());
+				int numOfBottles = rs.getInt("NumOfBottles");
+				Sales sale = new Sales(saleId, wineId, storeId, madeDate, numOfBottles);
+				sales.add(sale);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.closeConnection(connection);
+			ConnectionManager.closeStatement(ps);
+			ConnectionManager.closeResultSet(rs);
+		}
+		return sales;
+	}
+	
+	public List<Sales> getSalesByStoreId(int storeId) throws SQLException {
+		List<Sales> sales = new ArrayList<Sales>();
+		String selectSql = 
+				"SELECT SaleID, WineID, Sales.StoreID, MadeDate, NumOfBottles " 
+				+ "FROM Sales INNER JOIN Stores " 
+				+ "ON Sales.StoreID = Stores.StoreID " 
+				+ "WHERE Stores.StoreID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = ConnectionManager.getConnection();
+			ps = connection.prepareStatement(selectSql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				int saleId = rs.getInt("SaleID");
+				int wineId = rs.getInt("WineID");
+				Date madeDate = new Date(rs.getTimestamp("MadeDate").getTime());
+				int numOfBottles = rs.getInt("NumOfBottles");
+				Sales sale = new Sales(saleId, wineId, storeId, madeDate, numOfBottles);
+				sales.add(sale);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.closeConnection(connection);
+			ConnectionManager.closeStatement(ps);
+			ConnectionManager.closeResultSet(rs);
+		}
+		return sales;
+	}
+	
+	public List<Sales> getSalesByWineId(int wineId) throws SQLException {
+		List<Sales> sales = new ArrayList<Sales>();
+		String selectSql = "SELECT * FROM Sales WHERE WineID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = ConnectionManager.getConnection();
+			ps = connection.prepareStatement(selectSql);
+			ps.setInt(1, wineId);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				int saleId = rs.getInt("SaleID");
 				int storeId = rs.getInt("StoreID");
 				Date madeDate = new Date(rs.getTimestamp("MadeDate").getTime());
 				int numOfBottles = rs.getInt("NumOfBottles");

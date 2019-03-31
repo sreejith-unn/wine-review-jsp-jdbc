@@ -24,8 +24,8 @@ public class ReviewsDao {
 	
 	public Reviews create(Reviews review) throws SQLException {
 		String insertSql = 
-				"INSERT INTO Reviews(CustomerID, WineID, Content, Created) "
-				+ "VALUES(?, ?, ?, ?);";
+				"INSERT INTO Reviews(CustomerID, WineID, Content) "
+				+ "VALUES(?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -36,7 +36,7 @@ public class ReviewsDao {
 			ps.setInt(1, review.getCustomerId());
 			ps.setInt(2, review.getWineId());
 			ps.setString(3, review.getContent());
-			ps.setTimestamp(4, new Timestamp(review.getCreated().getTime()));
+			//ps.setTimestamp(4, new Timestamp(review.getCreated().getTime()));
 			affectedRowCount = ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			int reviewId = -1;

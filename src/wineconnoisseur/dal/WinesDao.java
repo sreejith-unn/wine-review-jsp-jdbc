@@ -155,6 +155,36 @@ public class WinesDao {
 		return wines;
 	}
 	
+	public List<Wines> getAllWines() throws SQLException {
+		List<Wines> wines = new ArrayList<Wines>();
+		String selectSql = "SELECT * FROM Wines LIMIT 100;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = ConnectionManager.getConnection();
+			ps = connection.prepareStatement(selectSql);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				int wineId = rs.getInt("WineId");
+				String name = rs.getString("Name");
+				String description = rs.getString("Description");
+				int price = rs.getInt("Price");
+				String variety = rs.getString("Variety");
+				String vineyard = rs.getString("Vineyard");
+				String wineryNameInDB = rs.getString("WineryName");
+				Wines wine = new Wines(wineId, name, description, price, variety, vineyard, wineryNameInDB);
+				wines.add(wine);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.closeConnection(connection);
+			ConnectionManager.closeStatement(ps);
+			ConnectionManager.closeResultSet(rs);
+		}
+		return wines;
+	}
 	public Wines updatePrice(Wines wine, int newPrice) throws SQLException {
 		String updateSql = "UPDATE Wines SET Price = ? WHERE WineID = ?;";
 		Connection connection = null;
