@@ -16,6 +16,9 @@ import wineconnoisseur.models.Wines;
 
 @WebServlet("/findwines")
 public class FindWines extends HttpServlet{
+	
+	private static final long serialVersionUID = -3815459933023272229L;
+	
 	protected WinesDao winesDao;
 	
 	@Override
@@ -25,14 +28,11 @@ public class FindWines extends HttpServlet{
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException{
-		
+			throws ServletException, IOException{	
 		// Map for storing messages.
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
-
         List<Wines> wines = new ArrayList<Wines>();
-        
         // Retrieve and validate name.
         String wineName = req.getParameter("winename");
         if (wineName == null || wineName.trim().isEmpty()) {
@@ -45,13 +45,13 @@ public class FindWines extends HttpServlet{
     			e.printStackTrace();
     			throw new IOException(e);
             }
-        	messages.put("success", "Displaying results for " + wineName);
-        	// Save the previous search term, so it can be used as the default
-        	// in the input box when rendering FindUsers.jsp.
-        	messages.put("previousWineName", wineName);
+        	if (wines.isEmpty()) {
+        		messages.put("success", "No matching results for " + wineName);
+        	} else {
+        		messages.put("success", "Displaying results for " + wineName);
+        	}
         }
         req.setAttribute("wines", wines);
-        
         req.getRequestDispatcher("/FindWines.jsp").forward(req, resp);
 	}
 	
@@ -61,26 +61,25 @@ public class FindWines extends HttpServlet{
         // Map for storing messages.
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
-
         List<Wines> wines = new ArrayList<Wines>();
-        
         // Retrieve and validate name.
-        
         String wineName = req.getParameter("winename");
         if (wineName == null || wineName.trim().isEmpty()) {
             messages.put("success", "Please enter a valid name.");
         } else {
-        	// Retrieve BlogUsers, and store as a message.
         	try {
         		wines = winesDao.getWinesByWineName(wineName);
             } catch (SQLException e) {
     			e.printStackTrace();
     			throw new IOException(e);
             }
-        	messages.put("success", "Displaying results for " + wineName);
+        	if (wines.isEmpty()) {
+        		messages.put("success", "No matching results for " + wineName);
+        	} else {
+        		messages.put("success", "Displaying results for " + wineName);
+        	}
         }
         req.setAttribute("wines", wines);
-        
         req.getRequestDispatcher("/FindWines.jsp").forward(req, resp);
     }
 }
